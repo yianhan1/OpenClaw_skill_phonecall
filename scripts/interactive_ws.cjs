@@ -17,7 +17,7 @@ fs.mkdirSync(AUDIO_DIR, { recursive: true });
 const PORT = 3456;
 const MISSION = process.argv[3] || process.argv[2] || "";
 if (!MISSION) { console.error("[voice] ERROR: 必須提供任務描述！用法: node interactive_ws.cjs \"打給某人，問他明早想吃什麼\""); process.exit(1); }
-const GREETING = "你好，我是主人的助理芊芊。";
+const GREETING = "你好～";
 const TASK = MISSION;
 const IDLE_TIMEOUT = 10 * 60 * 1000;
 let lastActivity = Date.now();
