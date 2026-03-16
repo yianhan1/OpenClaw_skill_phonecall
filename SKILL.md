@@ -33,7 +33,7 @@ nohup node skills/phone-call/scripts/interactive_ws.cjs \
   > /tmp/ws-server.log 2>&1 &
 ```
 
-第一個參數是開場白，第二個參數是任務描述（會寫入芊芊的 system prompt）。
+第一個參數是開場白，第二個參數是任務描述（必填！沒有任務描述芊芊會不知道要做什麼）（會寫入芊芊的 system prompt）。
 等 2 秒後確認：`cat /tmp/ws-server.log`，應看到 `[voice] Ready on port 3456`。
 
 ### 2. 撥號
