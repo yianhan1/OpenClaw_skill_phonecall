@@ -17,7 +17,7 @@ fs.mkdirSync(AUDIO_DIR, { recursive: true });
 const PORT = 3456;
 const MISSION = process.argv[3] || process.argv[2] || "";
 if (!MISSION) { console.error("[voice] ERROR: 必須提供任務描述！用法: node interactive_ws.cjs \"打給某人，問他明早想吃什麼\""); process.exit(1); }
-const GREETING = "你好～";
+const GREETING = "";
 const TASK = MISSION;
 const IDLE_TIMEOUT = 10 * 60 * 1000;
 let lastActivity = Date.now();
@@ -185,6 +185,7 @@ wss.on("connection", (ws) => {
   let speaking = false;
   let processing = false;
   let pendingBargeIn = false;
+  let aborted = false;
   let greeted = false;
   const history = []; // conversation history for Haiku
 
@@ -220,6 +221,7 @@ wss.on("connection", (ws) => {
         // Barge-in: user started talking while we're playing TTS
         if (processing && !pendingBargeIn) {
           pendingBargeIn = true;
+          aborted = true;
           ws.send(JSON.stringify({ event: "clear", streamSid }));
           console.log("[ws] Barge-in detected, clearing audio");
         }
@@ -236,6 +238,7 @@ wss.on("connection", (ws) => {
           if (fullPcm.length > 3200) {
             processing = true;
             pendingBargeIn = false;
+            aborted = false;
             try {
               const text = await transcribe(fullPcm);
               if (text.trim()) {
@@ -275,8 +278,12 @@ wss.on("connection", (ws) => {
                   sendAudio(ws, streamSid, await tts(naturalReply));
                 } else {
                   // Direct reply from Haiku
-                  history.push({ role: "assistant", content: reply });
-                  sendAudio(ws, streamSid, await tts(reply));
+                  if (!aborted) {
+                    history.push({ role: "assistant", content: reply });
+                    sendAudio(ws, streamSid, await tts(reply));
+                  } else {
+                    console.log("[ws] Skipped reply (barge-in)");
+                  }
                 }
               }
             } catch (e) {
