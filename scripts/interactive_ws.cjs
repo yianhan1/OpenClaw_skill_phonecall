@@ -15,11 +15,38 @@ fs.mkdirSync(INBOX, { recursive: true });
 fs.mkdirSync(AUDIO_DIR, { recursive: true });
 
 const PORT = 3456;
-const GREETING = process.argv[2] || "你好，我是主人的助理芊芊。有什麼我可以幫你的嗎？";
-const TASK = process.argv[3] || "";
+const MISSION = process.argv[2] || "";
+if (!MISSION) { console.error("[voice] ERROR: 必須提供任務描述！用法: node interactive_ws.cjs \"打給某人，問他明早想吃什麼\""); process.exit(1); }
+let GREETING = "";
+let TASK = "";
 const IDLE_TIMEOUT = 10 * 60 * 1000;
 let lastActivity = Date.now();
 let requestCounter = 0;
+
+// Use Haiku to generate greeting + task from single mission description
+async function prepareMission() {
+  const r = await bedrock.send(new InvokeModelCommand({
+    modelId: "us.anthropic.claude-haiku-4-5-20251001-v1:0",
+    contentType: "application/json",
+    body: JSON.stringify({
+      anthropic_version: "bedrock-2023-05-31",
+      max_tokens: 200,
+      messages: [{ role: "user", content: `根據以下任務描述，產生 JSON：
+任務：${MISSION}
+回傳格式（只回 JSON，不要其他文字）：
+{"greeting":"接通電話後的第一句開場白","task":"給助理的任務描述和策略"}
+開場白要自然親切，任務描述要具體明確。` }],
+    }),
+  }));
+  const text = JSON.parse(new TextDecoder().decode(r.body)).content[0].text;
+  const m = text.match(/\{[\s\S]*\}/);
+  if (!m) throw new Error("Haiku 回傳格式錯誤: " + text);
+  const parsed = JSON.parse(m[0]);
+  GREETING = parsed.greeting;
+  TASK = parsed.task;
+  console.log("[voice] Greeting:", GREETING);
+  console.log("[voice] Task:", TASK);
+}
 
 const SYSTEM_PROMPT = `你是 Iris（芊芊），主人的助理。你正在打電話。
 角色：專業親切、知性俐落、高情商。用中文對話。
@@ -295,12 +322,13 @@ wss.on("connection", (ws) => {
   ws.on("close", () => console.log("[ws] Disconnected"));
 });
 
-httpServer.listen(PORT, () => {
-  console.log(`[voice] Ready on port ${PORT}`);
-  console.log(`[voice] Webhook: https://voice.example.com/voice`);
-  console.log(`[voice] WS: wss://voice.example.com/stream`);
-  if (TASK) console.log(`[voice] Task: ${TASK}`);
-});
+prepareMission().then(() => {
+  httpServer.listen(PORT, () => {
+    console.log(`[voice] Ready on port ${PORT}`);
+    console.log(`[voice] Webhook: https://voice.example.com/voice`);
+    console.log(`[voice] WS: wss://voice.example.com/stream`);
+  });
+}).catch(e => { console.error("[voice] prepareMission failed:", e.message); process.exit(1); });
 
 setInterval(() => {
   if (Date.now() - lastActivity > IDLE_TIMEOUT) {
