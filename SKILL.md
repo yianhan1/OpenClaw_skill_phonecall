@@ -64,6 +64,7 @@ node skills/phone-call/scripts/bridge.cjs reply <id> <你的回應文字>
 **你必須反覆執行 poll → 思考 → reply 這個循環，直到通話結束。**
 每次 poll 到 `none` 就等幾秒再 poll。每次 poll 到訊息就立刻回應。
 回應必須在 45 秒內，否則超時。
+如果需要查資料（天氣、新聞等），先 reply 一句「好的，我幫你查一下」讓對方等待，查完後在下一輪 reply 回覆結果。
 
 範例循環：
 1. `node bridge.cjs poll --wait 30` → `{"id":1,"text":"你好，請問找誰？"}`
