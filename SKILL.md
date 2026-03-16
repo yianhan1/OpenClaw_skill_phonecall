@@ -44,7 +44,7 @@ const client = twilio(process.env.TWILIO_API_KEY, process.env.TWILIO_API_SECRET,
   accountSid: process.env.TWILIO_ACCOUNT_SID,
 });
 const call = await client.calls.create({
-  url: 'https://voice.yianhan.dpdns.org/voice',
+  url: 'https://voice.example.com/voice',
   to: '<電話號碼，E.164 格式如 +886912345678>',
   from: process.env.TWILIO_FROM_NUMBER,
 });
