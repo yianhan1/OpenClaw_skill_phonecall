@@ -50,7 +50,7 @@ console.log('Call SID:', call.sid);
 
 ```bash
 # 檢查有沒有新的語音訊息
-node skills/phone-call/scripts/bridge.cjs poll
+node skills/phone-call/scripts/bridge.cjs poll --wait 30
 ```
 
 - 回傳 `none` → 對方還沒說話，等 2-3 秒後再 poll
@@ -66,12 +66,12 @@ node skills/phone-call/scripts/bridge.cjs reply <id> <你的回應文字>
 回應必須在 45 秒內，否則超時。
 
 範例循環：
-1. `node bridge.cjs poll` → `{"id":1,"text":"你好，請問找誰？"}`
+1. `node bridge.cjs poll --wait 30` → `{"id":1,"text":"你好，請問找誰？"}`
 2. 思考回應（以 Iris 角色）
 3. `node bridge.cjs reply 1 你好，我是宜安的助理芊芊，想請問一下...`
-4. `node bridge.cjs poll` → `none`（等待中）
-5. 等 3 秒
-6. `node bridge.cjs poll` → `{"id":2,"text":"好的，你說"}`
+4. `node bridge.cjs poll --wait 30` → 等待中...（最多 30 秒）
+5. 
+6. `node bridge.cjs poll --wait 30` → `{"id":2,"text":"好的，你說"}`
 7. 思考回應
 8. `node bridge.cjs reply 2 ...`
 9. 重複直到任務完成或對方掛斷
