@@ -18,22 +18,23 @@ Cloudflare tunnel 和 port-forward 已常駐在 host（systemd），你不需要
 
 ### 1. 啟動 WS server（帶任務描述）
 
-根據任務制定開場白和任務描述：
+只需傳一個參數：任務描述（必填）。開場白已固定為「你好，我是主人的助理芊芊。」
+
+⚠️ 參數是「任務描述」不是開場白！描述芊芊這通電話要達成什麼目標。
 
 ```bash
-nohup node skills/phone-call/scripts/interactive_ws.cjs "開場白" "任務描述" > /tmp/ws-server.log 2>&1 &
+nohup node skills/phone-call/scripts/interactive_ws.cjs "<任務描述>" > /tmp/ws-server.log 2>&1 &
 echo $!
 ```
 
 範例：
 ```bash
-nohup node skills/phone-call/scripts/interactive_ws.cjs \
-  "你好，我是主人的助理芊芊，想跟你確認一些事情。" \
-  "目標：問到對方的姓名和生日。用自然對話引導，不要直球提問。" \
-  > /tmp/ws-server.log 2>&1 &
+nohup node skills/phone-call/scripts/interactive_ws.cjs "問對方明天早餐想吃什麼，語氣輕鬆自然" > /tmp/ws-server.log 2>&1 &
 ```
 
-第一個參數是開場白，第二個參數是任務描述（必填！沒有任務描述芊芊會不知道要做什麼）（會寫入芊芊的 system prompt）。
+```bash
+nohup node skills/phone-call/scripts/interactive_ws.cjs "確認對方的姓名和生日，用自然對話引導，不要直球提問" > /tmp/ws-server.log 2>&1 &
+```
 等 2 秒後確認：`cat /tmp/ws-server.log`，應看到 `[voice] Ready on port 3456`。
 
 ### 2. 撥號
