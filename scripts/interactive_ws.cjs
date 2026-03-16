@@ -243,7 +243,7 @@ wss.on("connection", (ws) => {
         audioChunks.push(pcm);
       } else if (speaking) {
         audioChunks.push(pcm);
-        if (++silenceFrames > 20) {
+        if (++silenceFrames > 30) {
           speaking = false;
           silenceFrames = 0;
           const fullPcm = Buffer.concat(audioChunks);
