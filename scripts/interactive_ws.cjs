@@ -13,6 +13,7 @@ fs.mkdirSync(INBOX, { recursive: true });
 fs.mkdirSync(AUDIO_DIR, { recursive: true });
 
 const PORT = 3456;
+const GREETING = process.argv[2] || "你好，我是宜安的助理芊芊。有什麼我可以幫你的嗎？";
 const IDLE_TIMEOUT = 10 * 60 * 1000;
 let lastActivity = Date.now();
 let requestCounter = 0;
@@ -144,7 +145,7 @@ wss.on("connection", (ws) => {
       if (!greeted) {
         greeted = true;
         try {
-          const audio = await tts("你好，我是宜安的助理芊芊。有什麼我可以幫你的嗎？");
+          const audio = await tts(GREETING);
           sendAudio(ws, streamSid, audio);
         } catch (e) { console.error("[ws] greeting error:", e.message); }
       }
