@@ -9,7 +9,7 @@ description: "AI 電話助理：透過 Twilio 撥打電話，以獨立角色 Iri
 
 ## 角色
 
-Iris 是獨立角色，對外自稱「宜安的助理」。詳見 [references/iris-persona.md](references/iris-persona.md)。
+Iris 是獨立角色，對外自稱「主人的助理」。詳見 [references/iris-persona.md](references/iris-persona.md)。
 
 ## 打電話的完整流程
 
@@ -20,7 +20,7 @@ Cloudflare tunnel 和 port-forward 已常駐在 host（systemd），你不需要
 根據任務制定 Iris 的開場白，然後啟動：
 
 ```bash
-nohup node skills/phone-call/scripts/interactive_ws.cjs "你好，我是宜安的助理芊芊，想跟你確認一些事情。" > /tmp/ws-server.log 2>&1 &
+nohup node skills/phone-call/scripts/interactive_ws.cjs "你好，我是主人的助理芊芊，想跟你確認一些事情。" > /tmp/ws-server.log 2>&1 &
 echo $!
 ```
 
@@ -37,7 +37,7 @@ const client = twilio(process.env.TWILIO_API_KEY, process.env.TWILIO_API_SECRET,
   accountSid: process.env.TWILIO_ACCOUNT_SID,
 });
 const call = await client.calls.create({
-  url: 'https://voice.yianhan.dpdns.org/voice',
+  url: 'https://voice.example.com/voice',
   to: '<電話號碼，E.164 格式如 +886912345678>',
   from: process.env.TWILIO_FROM_NUMBER,
 });
@@ -69,7 +69,7 @@ node skills/phone-call/scripts/bridge.cjs reply <id> <你的回應文字>
 範例循環：
 1. `node bridge.cjs poll --wait 30` → `{"id":1,"text":"你好，請問找誰？"}`
 2. 思考回應（以 Iris 角色）
-3. `node bridge.cjs reply 1 你好，我是宜安的助理芊芊，想請問一下...`
+3. `node bridge.cjs reply 1 你好，我是主人的助理芊芊，想請問一下...`
 4. `node bridge.cjs poll --wait 30` → 等待中...（最多 30 秒）
 5. 
 6. `node bridge.cjs poll --wait 30` → `{"id":2,"text":"好的，你說"}`

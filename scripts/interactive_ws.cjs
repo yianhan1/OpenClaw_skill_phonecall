@@ -13,7 +13,7 @@ fs.mkdirSync(INBOX, { recursive: true });
 fs.mkdirSync(AUDIO_DIR, { recursive: true });
 
 const PORT = 3456;
-const GREETING = process.argv[2] || "你好，我是宜安的助理芊芊。有什麼我可以幫你的嗎？";
+const GREETING = process.argv[2] || "你好，我是主人的助理芊芊。有什麼我可以幫你的嗎？";
 const IDLE_TIMEOUT = 10 * 60 * 1000;
 let lastActivity = Date.now();
 let requestCounter = 0;
@@ -116,7 +116,7 @@ const httpServer = http.createServer((req, res) => {
       lastActivity = Date.now();
       res.writeHead(200, { "Content-Type": "text/xml" });
       res.end(`<?xml version="1.0" encoding="UTF-8"?>
-<Response><Connect><Stream url="wss://voice.yianhan.dpdns.org/stream" /></Connect></Response>`);
+<Response><Connect><Stream url="wss://voice.example.com/stream" /></Connect></Response>`);
     });
     return;
   }
@@ -205,8 +205,8 @@ wss.on("connection", (ws) => {
 
 httpServer.listen(PORT, () => {
   console.log(`[voice] Ready on port ${PORT}`);
-  console.log(`[voice] Webhook: https://voice.yianhan.dpdns.org/voice`);
-  console.log(`[voice] WS: wss://voice.yianhan.dpdns.org/stream`);
+  console.log(`[voice] Webhook: https://voice.example.com/voice`);
+  console.log(`[voice] WS: wss://voice.example.com/stream`);
 });
 
 setInterval(() => {

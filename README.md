@@ -30,7 +30,7 @@ OpenClaw 下指令 → 啟動 WS server → Twilio 撥號
 1. Clone 到 OpenClaw workspace：
    ```bash
    cd /path/to/openclaw/workspace/skills
-   git clone https://github.com/yianhan1/OpenClaw_skill_phonecall.git phone-call
+   git clone https://github.com/<your-username>/<your-repo>.git phone-call
    ```
 
 2. 設定環境變數（透過 helm values 或 pod env）：
