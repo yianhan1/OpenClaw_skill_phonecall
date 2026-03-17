@@ -78,6 +78,7 @@ Looking for a more human-like calling experience?
 | Bilingual (Chinese + English) | ❌ | ✅ |
 | Smart call ending | ❌ | ✅ Detects intent to end, wraps up gracefully |
 | No-answer handling | ❌ | ✅ Auto-detect and end call |
+| Auto hang-up after goodbye | ❌ | ✅ Ends call after farewell |
 
 ## License
 
