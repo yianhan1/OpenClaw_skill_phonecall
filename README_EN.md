@@ -80,6 +80,8 @@ Looking for a more human-like calling experience?
 | No-answer handling | ❌ | ✅ Auto-detect and end call |
 | Natural wait response | ❌ | ✅ Acknowledges thinking time, no dead air |
 | Multi-segment understanding | ❌ | ✅ Merges fragmented speech for better replies |
+| Live info lookup | ❌ | ✅ Real-time search during calls |
+| Multi-model support | Single model | ✅ Switch between AI models |
 
 ## License
 
